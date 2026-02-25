@@ -1,129 +1,361 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    align-items: center;
-    background-color: #151632;
-    color: white;
-    font-size: 16px;
-    font-family: Helvetica;
-    overflow-x: hidden;
+:root {
+  --bg-main: #1a1a2e;
+  --bg-panel: rgba(22, 25, 43, 0.92);
+  --bg-chip: rgba(52, 58, 88, 0.72);
+  --bg-chip-active: rgba(130, 142, 194, 0.28);
+  --text-main: #edf0ff;
+  --text-muted: #b5bdd8;
+  --accent: #95a5ff;
+  --border-soft: rgba(150, 161, 210, 0.35);
+  --shadow-deep: 0 18px 44px rgba(0, 0, 0, 0.42);
 }
 
-#gui {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: black;
-  opacity: 0.9;
+html,
+body {
   margin: 0;
-  z-index: 10;
-  float: right;
-}
-
-.dg {
-  margin: 0 !important;
-}
-
-.closed{
-  height: 0px;
-}
-
-.close-button {
-  font-size: 1.2em;
-  font-weight: bold;
-  background-color: rgb(9, 81, 99) !important;
+  padding: 0;
+  background: radial-gradient(circle at 20% 15%, #24294a 0%, var(--bg-main) 55%);
+  color: var(--text-main);
+  font-size: 16px;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
 .container {
-    box-sizing: border-box;
-    max-width: 1200px;
-    width: 100vw;
-    align-items: center;
-    display: block;
-    margin: 0 auto;
-    padding: 0;
-    text-align: center;
-    justify-content: center;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* gap: 20px; */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 16px 18px 0;
+  text-align: center;
+}
+
+.appHeader {
+  margin: 4px auto 14px;
+}
+
+#appTitle,
+#aboutText {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 62px);
+  font-family: "Tiny5", sans-serif;
+  letter-spacing: 2px;
+  color: #f5f6ff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.tagline {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.stageWrap {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 canvas {
-  max-width: 100vw;
-  background: #000;
+  width: min(96vw, 1480px);
+  max-height: 74vh;
+  display: block;
   margin: 0 auto;
-  padding: 0;
+  background: #000;
+  border-radius: 14px;
+  box-shadow: var(--shadow-deep);
+  transition: box-shadow 0.24s ease, transform 0.24s ease;
 }
 
-#introDiv{
+canvas:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.5);
+}
+
+.controlDock {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+#presetChips,
+#gui {
+  pointer-events: auto;
+}
+
+#presetChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 470px;
+}
+
+.preset-chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--bg-chip);
+  color: var(--text-main);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 7px 12px;
+  margin: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.preset-chip:hover {
+  border-color: rgba(183, 193, 242, 0.72);
+  background: rgba(68, 74, 110, 0.85);
+  transform: translateY(-1px);
+}
+
+.preset-chip.active {
+  background: var(--bg-chip-active);
+  border-color: rgba(190, 200, 246, 0.9);
+  color: #f4f6ff;
+}
+
+#gui {
+  margin: 0;
+}
+
+.dg {
+  margin: 0;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.dg.main {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+}
+
+.dg.main .close-button,
+.dg.main .close-button.close-bottom {
+  background: #2e3558;
+  color: #eef2ff;
+  font-weight: 700;
+  border-top: 1px solid rgba(180, 187, 227, 0.25);
+}
+
+.dg .cr {
+  background: rgba(27, 32, 57, 0.96);
+  border-left: 3px solid rgba(127, 141, 214, 0.45);
+  border-bottom: 1px solid rgba(138, 148, 193, 0.2);
+  transition: background 0.2s ease;
+}
+
+.dg .cr:hover {
+  background: rgba(34, 40, 70, 0.98);
+}
+
+.dg .property-name,
+.dg .cr.string,
+.dg .cr.number,
+.dg .cr.boolean,
+.dg .cr.function {
+  color: #d7ddf6;
+}
+
+.dg input[type="text"] {
+  background: rgba(19, 22, 38, 0.9);
+  color: #f0f3ff;
+}
+
+.dg .c input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+#inputControls {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#buttonRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#urlRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 520px;
+}
+
+#urlInput {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(168, 178, 228, 0.35);
+  background: rgba(14, 17, 32, 0.85);
+  color: var(--text-main);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+#urlInput::placeholder {
+  color: rgba(168, 178, 228, 0.45);
+}
+
+#urlInput:focus {
+  border-color: var(--accent);
+}
+
+#loadUrlButton {
+  white-space: nowrap;
+}
+
+.url-hint-error {
+  color: #f87171;
+  font-size: 0.82rem;
+  margin: 0;
+  padding: 0 16px;
+  line-height: 1.5;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.url-hint-error a {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.url-hint-info {
+  color: rgba(168, 178, 228, 0.7);
+  font-size: 0.82rem;
+  margin: 0;
+  padding: 0 16px;
+  line-height: 1.5;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+button,
+.custom-file-upload {
+  padding: 8px 11px;
+  margin: 10px 3px;
+  border-radius: 8px;
+  border: 1px solid rgba(168, 178, 228, 0.5);
+  background: rgba(28, 34, 58, 0.9);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+button:hover,
+.custom-file-upload:hover {
+  background: rgba(43, 50, 84, 0.95);
+  border-color: rgba(197, 204, 240, 0.85);
+  transform: translateY(-1px);
+}
+
+input,
+select {
+  cursor: pointer;
+}
+
+input[type="file"] {
+  position: absolute;
+  top: -9999px;
+}
+
+#videoRecordingMessageDiv {
+  background: rgba(7, 10, 20, 0.92);
+  color: #e5e9ff;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 10px;
+}
+
+#notesDiv {
   width: 100vw;
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-
-  background-color: #2D0A3D;
-  padding-top: 2px;
-  padding-bottom: 10px;
-  text-align: center;
-  color:white;
-}
-
-#aboutText{
-  font-size: 40px;
-  font-family: "Tiny5", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  display:block;
-  padding: 0;
-  margin: 0;
-}
-
-#notesDiv{
-  width:100vw;
-  box-sizing: border-box;
-  /*overflow: hidden;*/
-  /* padding: 10px; */
   display: flex;
   justify-content: center;
   align-items: center;
-  /*border-top: 5px solid #581845;*/
-  background-color: #151632;
-  color: white;
+  background: transparent;
+  color: var(--text-main);
+  margin-top: 16px;
 }
 
 #textBox {
-  min-width: 350px;
-  max-width: 75vw;
+  width: min(980px, 92vw);
+  text-align: left;
+  background: rgba(18, 22, 38, 0.84);
+  border: 1px solid rgba(146, 156, 205, 0.28);
+  border-radius: 12px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.32);
+  padding: 18px 22px;
+}
+
+#aboutText {
+  font-size: clamp(30px, 3.8vw, 48px);
+  margin-bottom: 10px;
 }
 
 li {
   margin-bottom: 6px;
+  color: #dce1f9;
 }
 
-#linksDiv{
-  background-color: #faebf6;
+a,
+a:visited {
+  color: #a9b5ff;
+}
+
+#linksDiv {
+  margin-top: 12px;
+  background: rgba(239, 242, 255, 0.92);
+  color: #2a2c49;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-h2 {
-  font-size: 40px;
-  font-family: Helvetica;
+#infoMenuTable {
+  table-layout: fixed;
+  margin: 0;
 }
 
-#videoRecordingMessageDiv{
-  background: rgba(0, 0, 0, 0.75);
-  color:white;
-  font-family: helvetica;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 8px;
+#infoMenuTable td {
+  text-align: center;
+  border: 0;
+  padding: 18px;
+}
+
+.socialMediaButton {
+  color: #4f5dac;
+  font-size: 26px;
+  margin: 0;
+  padding: 4px;
+  border: none;
+  background-color: transparent;
+  max-width: 50px;
+  max-height: 50px;
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 .sticky-bottom {
@@ -133,85 +365,41 @@ h2 {
   width: 100%;
 }
 
-/* Styling for table with github and social links */
-
-#infoMenuTable td {
-  text-align:center;
-  border: 0;
-  padding: 20px;
-}
-
-#infoMenuTable{
-  table-layout: fixed;
-  margin: 0px;
-}
-
-a, a:visited{
-  color:rgb(161, 50, 154);
-}
-
-.socialMediaButton{
-  color:rgb(161, 50, 154);
-  font-size: 26px;
-  margin: 0;
-  padding: 4px;
-  border: none;
-  max-width: 50px;
-  max-height: 50px;
-  background-color: transparent;
-}
-
-#buyMeACoffeeButton {
-  font-size: 10px;
-}
-
-/* Styling for image upload field */
-input, select {
-  cursor: pointer;
-}
-
-input[type="file"] {
-  /*display: none;*/
-  position:absolute;
-  top:-9999px;
-}
-.custom-file-upload {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #226f63;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1em;
-  font-family: Helvetica;
-  display: inline-block;
-  padding: 8px;
-  cursor: pointer;
-  margin-left: 3px;
-  margin-right: 2px;
-}
-
-button {
-  padding: 6px;
-  font-weight: bold;
-  font-size: 1em;
-
-  margin: 10px 3px 10px 3px;
-  /*margin-left: 3px;
-  margin-right: 3px;*/
-
-  border: 3px solid #79e2d2;
-  border-radius: 6px;
-  background-color: #ffffff;
-
-  cursor: pointer;
-}
-
 table {
   border-collapse: collapse;
-  margin:auto;
+  margin: auto;
 }
 
 td {
   max-width: 250px;
 }
 
+@media (max-width: 1120px) {
+  .controlDock {
+    position: static;
+    margin-top: 10px;
+    align-items: center;
+  }
+
+  #presetChips {
+    justify-content: center;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .preset-chip {
+    font-size: 0.68rem;
+    padding: 7px 10px;
+  }
+
+  #textBox {
+    width: 94vw;
+    padding: 16px;
+  }
+}
